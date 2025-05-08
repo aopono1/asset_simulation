@@ -145,8 +145,8 @@ if st.sidebar.button('シミュレーション実行'):
         display_results,
         hide_index=True,
         column_config={
-            "投資資産額": st.column_config.TextColumn("投資資産額", width="medium", disabled=True),
-            "毎月の取り崩し金額": st.column_config.TextColumn("毎月の取り崩し金額", width="medium", disabled=True),
+            "投資資産額": st.column_config.NumberColumn("投資資産額", format="%,d", width="medium", disabled=True),
+            "毎月の取り崩し金額": st.column_config.NumberColumn("毎月の取り崩し金額", format="%,d", width="medium", disabled=True),
             "西暦": st.column_config.NumberColumn("西暦", format="%d", width="small", disabled=True),
             "年齢": st.column_config.NumberColumn("年齢", format="%d", width="small", disabled=True)
         }
