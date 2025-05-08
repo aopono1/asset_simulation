@@ -129,8 +129,12 @@ if st.sidebar.button('シミュレーション実行'):
     st.markdown(
         """
         <style>
-        .stDataEditorHeaderCell { justify-content: center; }
-        .stDataEditorCell { justify-content: flex-end; }
+        div[data-testid="stDataEditor"] thead th {
+            text-align: center;
+        }
+        div[data-testid="stDataEditor"] tbody td {
+            text-align: right;
+        }
         </style>
         """,
         unsafe_allow_html=True
