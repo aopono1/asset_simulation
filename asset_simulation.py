@@ -98,7 +98,11 @@ def plot_simulation(results):
     ax1.legend(['Total Assets'], loc='upper left')
     ax2.legend(['Monthly Withdrawal'], loc='upper right')
     
-    plt.tight_layout()
+    # tight_layoutをtry-exceptで囲む
+    try:
+        plt.tight_layout()
+    except Exception as e:
+        st.warning(f"レイアウト調整をスキップしました: {e}")
     
     return fig
 
