@@ -149,6 +149,24 @@ if st.sidebar.button('シミュレーション実行'):
     display_results['投資資産額'] = display_results['投資資産額'].apply(format_currency)
     display_results['毎月の取り崩し金額'] = display_results['毎月の取り崩し金額'].apply(format_currency)
 
+　　# （ページ最初で）スタイルを注入する
+st.markdown(
+    """
+    <style>
+    /* 全テーブルのヘッダー中央寄せ */
+    .stDataEditorHeaderCell {
+        justify-content: center;
+    }
+    
+    /* セルの文字列を右寄せ */
+    .stDataEditorCell {
+        justify-content: flex-end;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+    
     # データ表示
     st.data_editor(
         display_results,
