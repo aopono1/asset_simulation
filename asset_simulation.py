@@ -136,20 +136,7 @@ if st.sidebar.button('シミュレーション実行'):
         withdrawal_rate
     )
 
-    # グラフの表示
-    st.header('資産推移グラフ')
-    fig = plot_simulation(results)
-    st.pyplot(fig)
-
-    # 結果表の表示
-    st.header('シミュレーション結果')
-
-    # 金額のフォーマット
-    display_results = results.copy()
-    display_results['投資資産額'] = display_results['投資資産額'].apply(format_currency)
-    display_results['毎月の取り崩し金額'] = display_results['毎月の取り崩し金額'].apply(format_currency)
-
-　　# （ページ最初で）スタイルを注入する
+    # （ページ最初で）スタイルを注入する
 st.markdown(
     """
     <style>
@@ -166,6 +153,20 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+    # グラフの表示
+    st.header('資産推移グラフ')
+    fig = plot_simulation(results)
+    st.pyplot(fig)
+
+    # 結果表の表示
+    st.header('シミュレーション結果')
+
+    # 金額のフォーマット
+    display_results = results.copy()
+    display_results['投資資産額'] = display_results['投資資産額'].apply(format_currency)
+    display_results['毎月の取り崩し金額'] = display_results['毎月の取り崩し金額'].apply(format_currency)
+
 
 # そのあと、通常通りデータテーブルを表示する
 st.data_editor(
