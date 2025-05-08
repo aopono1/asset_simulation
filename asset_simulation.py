@@ -1,7 +1,7 @@
-import streamlit as st
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
+import matplotlib.dates as mdates
 from matplotlib.ticker import FuncFormatter
 
 def simulate_assets(
@@ -55,21 +55,21 @@ def simulate_assets(
             
     # 結果をデータフレームに格納
     results = pd.DataFrame({
-        'Year': years,
-        'Age': ages,
-        'Total Assets': assets,
-        'Monthly Withdrawal': monthly_withdrawals
+        '西暦': years,
+        '年齢': ages,
+        '投資資産額': assets,
+        '毎月の取り崩し金額': monthly_withdrawals
     })
     
     return results
 
 def plot_simulation(results):
-    fig, ax1 = plt.subplots(figsize=(10, 6))
+    fig, ax1 = plt.subplots(figsize=(12, 8))
     
     # 左軸（投資資産額）
     ax1.set_xlabel('Age', fontsize=12)
     ax1.set_ylabel('Total Assets (10,000 JPY)', fontsize=12)
-    ax1.plot(results['Age'], results['Total Assets'] / 10000, 'b-', linewidth=2, marker='o', markersize=4)
+    ax1.plot(results['年齢'], results['投資資産額'] / 10000, 'b-', linewidth=2)
     ax1.tick_params(axis='y', labelcolor='blue')
     
     # 資産額の表示を整形（万円単位）
@@ -83,7 +83,7 @@ def plot_simulation(results):
     # 右軸（毎月の取り崩し金額）
     ax2 = ax1.twinx()
     ax2.set_ylabel('Monthly Withdrawal (10,000 JPY)', fontsize=12, color='red')
-    ax2.plot(results['Age'], results['Monthly Withdrawal'] / 10000, 'r-', linewidth=2, marker='s', markersize=4)
+    ax2.plot(results['年齢'], results['毎月の取り崩し金額'] / 10000, 'r-', linewidth=2)
     ax2.tick_params(axis='y', labelcolor='red')
     
     # 取り崩し金額の表示を整形（万円単位）
@@ -98,11 +98,7 @@ def plot_simulation(results):
     ax1.legend(['Total Assets'], loc='upper left')
     ax2.legend(['Monthly Withdrawal'], loc='upper right')
     
-    # tight_layoutをtry-exceptで囲む
-    try:
-        plt.tight_layout()
-    except Exception as e:
-        st.warning(f"レイアウト調整をスキップしました: {e}")
+    plt.tight_layout()
     
     return fig
 
@@ -110,132 +106,54 @@ def format_currency(value):
     """金額を見やすく整形する（例: 10000 -> 10,000）"""
     return f"{value:,.0f}"
 
-# Streamlitアプリのメイン部分
 def main():
-    st.set_page_config(page_title="Asset Projection Simulator", layout="wide")
+    print("===== 資産予測シミュレーター =====")
     
-    st.title("Asset Projection Simulator")
+    # ユーザー入力
+    start_year = int(input("開始年（西暦）: "))
+    start_age = int(input("開始時の年齢: "))
+    initial_assets = float(input("現在の投資資産額（円）: "))
+    annual_return = float(input("年間利回り率（%）: ")) / 100
+    monthly_investment = float(input("毎月の積立額（円）: "))
+    end_investment_year = int(input("積立終了年（西暦）: "))
+    start_withdrawal_year = int(input("取り崩し開始年（西暦）: "))
+    withdrawal_rate = float(input("年間取り崩し率（%）: ")) / 100
     
-    # サイドバーに入力フォームを配置
-    st.sidebar.header("Input Parameters")
-    
-    start_year = st.sidebar.number_input("Starting Year", min_value=2000, max_value=2100, value=2024)
-    start_age = st.sidebar.number_input("Your Current Age", min_value=20, max_value=90, value=30)
-    
-    initial_assets = st.sidebar.number_input(
-        "Current Investment Assets (JPY)", 
-        min_value=0, 
-        max_value=1000000000, 
-        value=10000000,
-        step=1000000,
-        format="%d"
+    # シミュレーション実行
+    results = simulate_assets(
+        start_year,
+        start_age,
+        initial_assets,
+        annual_return,
+        monthly_investment,
+        end_investment_year,
+        start_withdrawal_year,
+        withdrawal_rate
     )
     
-    # 年間利回り率（%）
-    annual_return = st.sidebar.slider(
-        "Annual Investment Return Rate", 
-        min_value=0.0, 
-        max_value=10.0, 
-        value=3.0, 
-        step=0.1,
-        format="%.1f%%"
-    ) / 100
+    # 結果表示
+    print("\n===== シミュレーション結果 =====")
+    display_results = results.copy()
     
-    monthly_investment = st.sidebar.number_input(
-        "Monthly Investment Amount (JPY)", 
-        min_value=0, 
-        max_value=1000000, 
-        value=50000,
-        step=10000,
-        format="%d"
-    )
+    # 西暦の表示からカンマを削除
+    display_results['西暦'] = display_results['西暦'].astype(int)
     
-    end_investment_year = st.sidebar.number_input(
-        "Year to End Monthly Investment", 
-        min_value=start_year, 
-        max_value=2100, 
-        value=start_year + 30
-    )
+    # 金額のフォーマット
+    display_results['投資資産額'] = display_results['投資資産額'].apply(format_currency)
+    display_results['毎月の取り崩し金額'] = display_results['毎月の取り崩し金額'].apply(format_currency)
     
-    start_withdrawal_year = st.sidebar.number_input(
-        "Year to Start Withdrawals", 
-        min_value=start_year, 
-        max_value=2100, 
-        value=start_year + 35
-    )
+    # 各年のデータを表示
+    print(display_results.to_string(index=False))
     
-    # 年間の取り崩し割合（%）
-    withdrawal_rate = st.sidebar.slider(
-        "Annual Withdrawal Rate", 
-        min_value=0.0, 
-        max_value=20.0, 
-        value=4.0, 
-        step=0.1,
-        format="%.1f%%"
-    ) / 100
+    # グラフの作成と表示
+    fig = plot_simulation(results)
+    plt.show()
     
-    # 計算ボタン
-    if st.sidebar.button("Calculate"):
-        # シミュレーション実行
-        results = simulate_assets(
-            start_year,
-            start_age,
-            initial_assets,
-            annual_return,
-            monthly_investment,
-            end_investment_year,
-            start_withdrawal_year,
-            withdrawal_rate
-        )
-        
-        # 結果の表示
-        st.subheader("Simulation Results")
-        
-        # グラフの表示
-        fig = plot_simulation(results)
-        st.pyplot(fig)
-        
-        # 資金が枯渇する年の計算
-        depleted_row = results[results['Total Assets'] <= 0]
-        if not depleted_row.empty:
-            depletion_age = depleted_row.iloc[0]['Age']
-            depletion_year = depleted_row.iloc[0]['Year']
-            st.warning(f"⚠️ Assets will be depleted at age {depletion_age} (year {depletion_year}).")
-        else:
-            last_age = results.iloc[-1]['Age']
-            st.success(f"✅ Assets will last beyond age {last_age}.")
-        
-        # データテーブルの表示
-        st.subheader("Yearly Data")
-        
-        # データテーブル用にコピーを作成し、金額を整形
-        display_results = results.copy()
-        display_results['Total Assets'] = display_results['Total Assets'].apply(format_currency)
-        display_results['Monthly Withdrawal'] = display_results['Monthly Withdrawal'].apply(format_currency)
-        
-        # 5年おきにデータをフィルタリング（表示を簡素化）
-        step = st.radio("Display frequency:", ["Every year", "Every 5 years", "Every 10 years"], horizontal=True)
-        if step == "Every 5 years":
-            filtered_results = display_results.iloc[::5].copy()
-        elif step == "Every 10 years":
-            filtered_results = display_results.iloc[::10].copy()
-        else:
-            filtered_results = display_results
-            
-        st.dataframe(filtered_results, use_container_width=True)
-        
-        # CSVダウンロードボタン
-        csv = results.to_csv(index=False)
-        st.download_button(
-            label="Download CSV",
-            data=csv,
-            file_name="asset_projection_results.csv",
-            mime="text/csv",
-        )
-    
-    else:
-        # 計算前の初期表示
-        st.info("Enter your parameters and click 'Calculate' to see the simulation results.")
+    # CSVファイルに保存
+    results_en = results.copy()
+    results_en.columns = ['Year', 'Age', 'Total Assets', 'Monthly Withdrawal']
+    results_en.to_csv('asset_projection_results.csv', index=False, encoding='utf-8-sig')
+    print("\nシミュレーション結果をCSVファイルに保存しました: asset_projection_results.csv")
 
 if __name__ == "__main__":
     main()
