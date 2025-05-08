@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import streamlit as st
 import matplotlib.dates as mdates
 from matplotlib.ticker import FuncFormatter
 
@@ -106,19 +107,23 @@ def format_currency(value):
     """金額を見やすく整形する（例: 10000 -> 10,000）"""
     return f"{value:,.0f}"
 
-def main():
-    print("===== 資産予測シミュレーター =====")
-    
-    # ユーザー入力
-    start_year = int(input("開始年（西暦）: "))
-    start_age = int(input("開始時の年齢: "))
-    initial_assets = float(input("現在の投資資産額（円）: "))
-    annual_return = float(input("年間利回り率（%）: ")) / 100
-    monthly_investment = float(input("毎月の積立額（円）: "))
-    end_investment_year = int(input("積立終了年（西暦）: "))
-    start_withdrawal_year = int(input("取り崩し開始年（西暦）: "))
-    withdrawal_rate = float(input("年間取り崩し率（%）: ")) / 100
-    
+# Streamlitアプリケーション
+st.title('資産予測シミュレーター')
+
+# サイドバーでのパラメータ入力
+with st.sidebar:
+    st.header('入力パラメータ')
+    start_year = st.number_input('開始年（西暦）', min_value=2000, max_value=2100, value=2025)
+    start_age = st.number_input('開始時の年齢', min_value=20, max_value=90, value=30)
+    initial_assets = st.number_input('現在の投資資産額（円）', min_value=0, value=10000000)
+    annual_return = st.slider('年間利回り率（%）', min_value=0.0, max_value=15.0, value=5.0) / 100
+    monthly_investment = st.number_input('毎月の積立額（円）', min_value=0, value=100000)
+    end_investment_year = st.number_input('積立終了年（西暦）', min_value=start_year, max_value=2100, value=start_year + 30)
+    start_withdrawal_year = st.number_input('取り崩し開始年（西暦）', min_value=start_year, max_value=2100, value=start_year + 35)
+    withdrawal_rate = st.slider('年間取り崩し率（%）', min_value=0.0, max_value=10.0, value=4.0) / 100
+
+# シミュレーション実行ボタン
+if st.sidebar.button('シミュレーション実行'):
     # シミュレーション実行
     results = simulate_assets(
         start_year,
@@ -131,29 +136,29 @@ def main():
         withdrawal_rate
     )
     
-    # 結果表示
-    print("\n===== シミュレーション結果 =====")
-    display_results = results.copy()
+    # グラフの表示
+    st.header('資産推移グラフ')
+    fig = plot_simulation(results)
+    st.pyplot(fig)
     
-    # 西暦の表示からカンマを削除
-    display_results['西暦'] = display_results['西暦'].astype(int)
+    # 結果表の表示
+    st.header('シミュレーション結果')
     
     # 金額のフォーマット
+    display_results = results.copy()
     display_results['投資資産額'] = display_results['投資資産額'].apply(format_currency)
     display_results['毎月の取り崩し金額'] = display_results['毎月の取り崩し金額'].apply(format_currency)
     
-    # 各年のデータを表示
-    print(display_results.to_string(index=False))
+    # 結果テーブルを表示
+    st.dataframe(display_results)
     
-    # グラフの作成と表示
-    fig = plot_simulation(results)
-    plt.show()
-    
-    # CSVファイルに保存
-    results_en = results.copy()
-    results_en.columns = ['Year', 'Age', 'Total Assets', 'Monthly Withdrawal']
-    results_en.to_csv('asset_projection_results.csv', index=False, encoding='utf-8-sig')
-    print("\nシミュレーション結果をCSVファイルに保存しました: asset_projection_results.csv")
-
-if __name__ == "__main__":
-    main()
+    # CSVダウンロード機能
+    csv = results.to_csv(index=False).encode('utf-8-sig')
+    st.download_button(
+        label="CSVファイルをダウンロード",
+        data=csv,
+        file_name='asset_projection_results.csv',
+        mime='text/csv',
+    )
+else:
+    st.info('左側のパラメータを設定し、「シミュレーション実行」ボタンをクリックしてください。')
