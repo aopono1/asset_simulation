@@ -100,6 +100,16 @@ if st.sidebar.button('シミュレーション実行'):
         withdrawal_rate
     )
 
+　　st.markdown(
+        """
+        <style>
+        .st-emotion-cache-1q9bdsx th { text-align: center; }
+        .st-emotion-cache-1q9bdsx td { text-align: right; }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
     st.header('資産推移グラフ')
     fig = plot_simulation(results)
     st.pyplot(fig)
@@ -112,15 +122,15 @@ if st.sidebar.button('シミュレーション実行'):
     display_results['毎月の取り崩し金額'] = display_results['毎月の取り崩し金額'].apply(format_currency)
 
     # --- CSSでスタイル注入（必ずここで） ---
-    st.markdown(
-        """
-        <style>
-        .stDataEditorHeaderCell { justify-content: center; }
-        .stDataEditorCell { justify-content: flex-end; }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    #st.markdown(
+    #    """
+    #    <style>
+    #    .stDataEditorHeaderCell { justify-content: center; }
+    #    .stDataEditorCell { justify-content: flex-end; }
+    #    </style>
+    #    """,
+    #    unsafe_allow_html=True
+    #)
 
     # --- テーブル表示 ---
     st.data_editor(
