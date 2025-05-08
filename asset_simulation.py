@@ -122,23 +122,9 @@ if st.sidebar.button('シミュレーション実行'):
 
     # 金額整形
     display_results = results.copy()
-    display_results['投資資産額'] = display_results['投資資産額'].apply(format_currency)
-    display_results['毎月の取り崩し金額'] = display_results['毎月の取り崩し金額'].apply(format_currency)
+    #display_results['投資資産額'] = display_results['投資資産額'].apply(format_currency)
+    #display_results['毎月の取り崩し金額'] = display_results['毎月の取り崩し金額'].apply(format_currency)
 
-    # --- CSSでスタイル注入（必ずここで） ---
-    st.markdown(
-        """
-        <style>
-        div[data-testid="stDataEditor"] thead th {
-            text-align: center;
-        }
-        div[data-testid="stDataEditor"] tbody td {
-            text-align: right;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
 
     # --- テーブル表示 ---
     st.data_editor(
