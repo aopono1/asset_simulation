@@ -160,6 +160,23 @@ if st.sidebar.button('シミュレーション実行'):
             "年齢": st.column_config.NumberColumn("年齢", format="%d", width="small", disabled=True)
         }
     )
+    # ヘッダー中央・データ右寄せにするCSS
+st.markdown(
+    """
+    <style>
+    /* 全テーブルのヘッダー中央寄せ */
+    .stDataEditorHeaderCell {
+        justify-content: center;
+    }
+    
+    /* セルの文字列を右寄せ */
+    .stDataEditorCell {
+        justify-content: flex-end;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
     # CSVダウンロード機能
     csv = results.to_csv(index=False).encode('utf-8-sig')
