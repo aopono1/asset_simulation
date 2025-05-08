@@ -103,8 +103,12 @@ if st.sidebar.button('シミュレーション実行'):
     st.markdown(
         """
         <style>
-        .st-emotion-cache-1q9bdsx th { text-align: center; }
-        .st-emotion-cache-1q9bdsx td { text-align: right; }
+        .stDataEditorHeaderCell {
+            justify-content: center;
+        }
+        .stDataEditorCell {
+            justify-content: flex-end;
+        }
         </style>
         """,
         unsafe_allow_html=True
