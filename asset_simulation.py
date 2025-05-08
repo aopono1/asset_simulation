@@ -149,7 +149,7 @@ if st.sidebar.button('シミュレーション実行'):
     display_results['投資資産額'] = display_results['投資資産額'].apply(format_currency)
     display_results['毎月の取り崩し金額'] = display_results['毎月の取り崩し金額'].apply(format_currency)
 
-　　# スタイルを注入する
+　　# スタイル
 　　st.markdown(
     """
     <style>
