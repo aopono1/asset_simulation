@@ -100,7 +100,7 @@ if st.sidebar.button('シミュレーション実行'):
         withdrawal_rate
     )
 
-　　st.markdown(
+  st.markdown(
         """
         <style>
         .st-emotion-cache-1q9bdsx th { text-align: center; }
