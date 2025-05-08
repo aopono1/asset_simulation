@@ -149,8 +149,8 @@ if st.sidebar.button('シミュレーション実行'):
     display_results['投資資産額'] = display_results['投資資産額'].apply(format_currency)
     display_results['毎月の取り崩し金額'] = display_results['毎月の取り崩し金額'].apply(format_currency)
 
-　　# スタイル
-　　st.markdown(
+　　# （ページ最初で）スタイルを注入する
+st.markdown(
     """
     <style>
     /* 全テーブルのヘッダー中央寄せ */
@@ -165,19 +165,20 @@ if st.sidebar.button('シミュレーション実行'):
     </style>
     """,
     unsafe_allow_html=True
-　　)
-    
-    # データ表示
-    st.data_editor(
-        display_results,
-        hide_index=True,
-        column_config={
-            "投資資産額": st.column_config.TextColumn("投資資産額", width="medium", disabled=True),
-            "毎月の取り崩し金額": st.column_config.TextColumn("毎月の取り崩し金額", width="medium", disabled=True),
-            "西暦": st.column_config.NumberColumn("西暦", format="%d", width="small", disabled=True),
-            "年齢": st.column_config.NumberColumn("年齢", format="%d", width="small", disabled=True)
-        }
-    )
+)
+
+# そのあと、通常通りデータテーブルを表示する
+st.data_editor(
+    display_results,
+    hide_index=True,
+    column_config={
+        "投資資産額": st.column_config.TextColumn("投資資産額", width="medium", disabled=True),
+        "毎月の取り崩し金額": st.column_config.TextColumn("毎月の取り崩し金額", width="medium", disabled=True),
+        "西暦": st.column_config.NumberColumn("西暦", format="%d", width="small", disabled=True),
+        "年齢": st.column_config.NumberColumn("年齢", format="%d", width="small", disabled=True)
+    }
+)
+
 
 
     # CSVダウンロード機能
