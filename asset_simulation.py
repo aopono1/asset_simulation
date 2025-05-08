@@ -150,16 +150,27 @@ if st.sidebar.button('シミュレーション実行'):
     display_results['毎月の取り崩し金額'] = display_results['毎月の取り崩し金額'].apply(format_currency)
     
     # 結果テーブルを表示（インデックスなし、数字を右寄せ）
-    st.dataframe(
-        display_results,
-        hide_index=True,
-        column_config={
-            "投資資産額": st.column_config.TextColumn("投資資産額", text_align="right"),
-            "毎月の取り崩し金額": st.column_config.TextColumn("毎月の取り崩し金額", text_align="right"),
-            "西暦": st.column_config.NumberColumn("西暦", format="%d", text_align="right"),
-            "年齢": st.column_config.NumberColumn("年齢", format="%d", text_align="right")
-        }
-    )
+    #st.dataframe(
+    #    display_results,
+    #    hide_index=True,
+    #    column_config={
+    #        "投資資産額": st.column_config.TextColumn("投資資産額", text_align="right"),
+    #        "毎月の取り崩し金額": st.column_config.TextColumn("毎月の取り崩し金額", text_align="right"),
+    #        "西暦": st.column_config.NumberColumn("西暦", format="%d", text_align="right"),
+    #        "年齢": st.column_config.NumberColumn("年齢", format="%d", text_align="right")
+    #    }
+    #)
+    st.data_editor(
+    display_results,
+    hide_index=True,
+    column_config={
+        "投資資産額": st.column_config.TextColumn("投資資産額", width="medium", disabled=True),
+        "毎月の取り崩し金額": st.column_config.TextColumn("毎月の取り崩し金額", width="medium", disabled=True),
+        "西暦": st.column_config.NumberColumn("西暦", format="%d", width="small", disabled=True),
+        "年齢": st.column_config.NumberColumn("年齢", format="%d", width="small", disabled=True)
+    }
+)
+
     
     # CSVダウンロード機能
     csv = results.to_csv(index=False).encode('utf-8-sig')
