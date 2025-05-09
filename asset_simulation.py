@@ -73,7 +73,7 @@ def format_currency(value):
     return f"{value:,.0f}"
 
 # --- Streamlit アプリケーション ---
-st.title('資産予測シミュレーター')
+st.title('投資資産と取り崩し金額のシミュレーション')
 
 # サイドバー入力
 with st.sidebar:
@@ -114,7 +114,7 @@ if st.sidebar.button('シミュレーション実行'):
         unsafe_allow_html=True
     )
     
-    st.header('資産推移グラフ')
+    st.header('投資資産と取り崩し金額の推移')
     fig = plot_simulation(results)
     st.pyplot(fig)
 
