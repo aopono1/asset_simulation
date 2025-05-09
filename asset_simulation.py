@@ -79,9 +79,9 @@ st.title('資産予測シミュレーター')
 with st.sidebar:
     st.header('入力パラメータ')
     start_year = st.number_input('開始年（西暦）', min_value=2000, max_value=2100, value=2025)
-    start_age = st.number_input('開始時の年齢', min_value=20, max_value=90, value=30)
-    initial_assets = st.number_input('現在の投資資産額（円）', min_value=0, value=5000000)
-    annual_return = st.slider('年間利回り率（%）', min_value=0.0, max_value=15.0, value=7.0) / 100
+    start_age = st.number_input('年齢', min_value=20, max_value=90, value=30)
+    initial_assets = st.number_input('保有している投資資産（円）', min_value=0, value=5000000)
+    annual_return = st.slider('年間利回り（%）', min_value=0.0, max_value=15.0, value=7.0) / 100
     monthly_investment = st.number_input('毎月の積立額（円）', min_value=0, value=30000)
     end_investment_year = st.number_input('積立終了年（西暦）', min_value=start_year, max_value=2100, value=start_year + 30)
     start_withdrawal_year = st.number_input('取り崩し開始年（西暦）', min_value=start_year, max_value=2100, value=start_year + 35)
