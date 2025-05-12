@@ -73,7 +73,7 @@ def format_currency(value):
     return f"{value:,.0f}"
 
 # --- Streamlit アプリケーション ---
-#st.title('「投資資産」と「取り崩し金額」のシミュレーション')
+#st.title('「じぶん年金」のシミュレーション')
 
 # サイドバー入力
 with st.sidebar:
